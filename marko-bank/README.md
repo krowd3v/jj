@@ -10,7 +10,8 @@ repository root.
 
 | File | Source | Use |
 |---|---|---|
-| `jj-architecture-components.html` | `MARKO_MAP.md`, `.marks.toml`, and the bank files | Standalone top-down component view showing architectural levels, flow buildup, reusable modules, and documentation surfaces |
+| `jj-architecture-components.html` | `MARKO_MAP.md`, `.marks.toml`, and the bank files | Standalone top-down component view with hoverable repository map, flow buildup, Mermaid diagrams, reusable modules, and documentation surfaces |
+| `SESSION_PROVENANCE.md` | Recovered Codex session transcript and current follow-up | Initial prompt, current prompt, and output provenance for the Marko/HTML work |
 | `jj-reusable-bank.txt` | `.marks.toml` group `jj-reusable-bank` | Curated reusable modules across CLI, repo, transaction, revset, working copy, and Git refs |
 | `jj-entry.txt` | group `jj-entry` | Binary and CLI bootstrap path |
 | `jj-command-surface.txt` | group `jj-command-surface` | Command registry, dispatch, and helper context |
