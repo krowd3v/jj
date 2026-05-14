@@ -2,10 +2,15 @@
 
 This bank was pulled from source with `/Users/mm/Documents/dev/TGramm/marko/target/debug/marko`.
 
+Native JJ is initialized colocated in this checkout. The local binary is
+`../target/debug/jj` relative to this directory, or `target/debug/jj` from the
+repository root.
+
 ## Files
 
 | File | Source | Use |
 |---|---|---|
+| `jj-architecture-components.html` | `MARKO_MAP.md`, `.marks.toml`, and the bank files | Standalone top-down component view showing architectural levels, flow buildup, reusable modules, and documentation surfaces |
 | `jj-reusable-bank.txt` | `.marks.toml` group `jj-reusable-bank` | Curated reusable modules across CLI, repo, transaction, revset, working copy, and Git refs |
 | `jj-entry.txt` | group `jj-entry` | Binary and CLI bootstrap path |
 | `jj-command-surface.txt` | group `jj-command-surface` | Command registry, dispatch, and helper context |
