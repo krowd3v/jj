@@ -389,6 +389,221 @@
       color: var(--muted);
     }
 
+    .source-layout,
+    .function-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
+      gap: 18px;
+      margin-top: 24px;
+      align-items: start;
+    }
+
+    .source-board,
+    .source-detail,
+    .function-browser,
+    .function-detail {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .source-node,
+    .function-card,
+    .diagram-open {
+      font: inherit;
+      text-align: left;
+      border: 1px solid #cbd5d1;
+      border-radius: 8px;
+      background: #fbfcfb;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .source-node,
+    .function-card {
+      display: block;
+      width: 100%;
+      min-height: 118px;
+      padding: 14px;
+    }
+
+    .source-node:hover,
+    .source-node:focus,
+    .source-node.is-active,
+    .function-card:hover,
+    .function-card:focus,
+    .function-card.is-active {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.13);
+    }
+
+    .source-node strong,
+    .function-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .coverage-bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+      margin: 12px 0 8px;
+    }
+
+    .coverage-bar span {
+      display: block;
+      height: 100%;
+      width: var(--coverage, 0%);
+      background: linear-gradient(90deg, #0f766e, #b45309);
+    }
+
+    .mini-meta {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .source-list {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .source-list li {
+      padding: 9px 10px;
+      border: 1px solid #dce3df;
+      border-radius: 7px;
+      background: #fbfcfb;
+      font-size: 0.92rem;
+    }
+
+    .source-list .mapped {
+      border-left: 5px solid var(--accent);
+    }
+
+    .source-list .unmapped {
+      border-left: 5px solid #9ca3af;
+    }
+
+    .source-list small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    .diagram-panel {
+      position: relative;
+    }
+
+    .diagram-open {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 10px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      background: #eef4f7;
+    }
+
+    .diagram-panel .mermaid {
+      margin-top: 22px;
+      min-height: 360px;
+    }
+
+    .diagram-panel[data-size="wide"] .mermaid {
+      min-height: 520px;
+    }
+
+    .diagram-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 50;
+    }
+
+    .diagram-modal.is-open {
+      display: block;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.58);
+    }
+
+    .modal-surface {
+      position: absolute;
+      inset: 32px;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #cbd5d1;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.28);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #f8faf7;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .modal-close {
+      border: 1px solid #cbd5d1;
+      border-radius: 7px;
+      background: #ffffff;
+      padding: 8px 12px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .modal-content {
+      overflow: auto;
+      padding: 22px;
+    }
+
+    .modal-content svg {
+      min-width: 1120px;
+      width: 100%;
+      height: auto;
+    }
+
+    .modal-content .mermaid {
+      min-width: 1120px;
+      min-height: 760px;
+      align-items: start;
+      justify-items: center;
+    }
+
+    .diagram-hint {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+
     @media (max-width: 760px) {
       header {
         min-height: 76vh;
@@ -402,6 +617,15 @@
 
       .repo-map {
         grid-template-columns: 1fr;
+      }
+
+      .source-layout,
+      .function-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-surface {
+        inset: 12px;
       }
 
       .module-table {
@@ -815,6 +1039,10 @@
             <dd id="inspect-doc">Command lifecycle, frontend extension hooks, snapshot/update policy.</dd>
             <dt>Source anchors</dt>
             <dd id="inspect-anchors"><code>cli/src/main.rs</code>, <code>cli/src/cli_util.rs</code>, <code>cli/src/commands/mod.rs</code></dd>
+            <dt>Extracted source</dt>
+            <dd id="inspect-extracted"><code>cli/src/main.rs</code>, <code>cli/src/cli_util.rs</code>, <code>cli/src/commands/mod.rs</code></dd>
+            <dt>Not extracted nearby</dt>
+            <dd id="inspect-unmapped"><code>cli/src/config.rs</code>, <code>cli/src/ui.rs</code>, individual command files</dd>
           </dl>
         </aside>
       </div>
@@ -828,7 +1056,7 @@
         workspace state starts transactions against the library core, and Git
         interop synchronizes selected external refs.
       </p>
-      <div class="diagram-panel">
+      <div class="diagram-panel" data-size="wide">
         <h3>Whole JJ Architecture</h3>
         <div class="mermaid">
 flowchart LR
@@ -860,6 +1088,112 @@ flowchart LR
           <code>Transaction</code>, <code>LocalWorkingCopy</code>, and
           <code>GitBackend</code>.
         </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Source Coverage Map</h2>
+      <p class="lede">
+        The Marko extraction is a focused trace through JJ's architecture, not a
+        full-source index. This view maps the extracted components back to real
+        repository files and shows the unmapped surface around them.
+      </p>
+      <div class="source-layout">
+        <div class="source-board">
+          <h3>Mapped Versus Unmapped Source</h3>
+          <p class="mini-meta">Coverage in <code>cli/src</code> and <code>lib/src</code>: 9 mapped files / 281 source files, with 38 Marko anchors.</p>
+          <div class="source-grid">
+            <button class="source-node is-active" data-source-key="cli-core" style="--coverage: 21%;">
+              <strong>CLI core</strong>
+              <span class="mini-meta">3 mapped / 14 core files</span>
+              <span class="coverage-bar"><span></span></span>
+              <span class="mini-meta">entry, runner, config/workspace helper surface</span>
+            </button>
+            <button class="source-node" data-source-key="commands" style="--coverage: 1%;">
+              <strong>Command tree</strong>
+              <span class="mini-meta">1 mapped / 134 command files</span>
+              <span class="coverage-bar"><span></span></span>
+              <span class="mini-meta">registry mapped; individual commands mostly unmapped</span>
+            </button>
+            <button class="source-node" data-source-key="lib-core" style="--coverage: 23%;">
+              <strong>Library flow core</strong>
+              <span class="mini-meta">6 mapped / 26 architectural files</span>
+              <span class="coverage-bar"><span></span></span>
+              <span class="mini-meta">repo, transaction, revset, working copy, Git</span>
+            </button>
+            <button class="source-node" data-source-key="storage" style="--coverage: 0%;">
+              <strong>Storage and index internals</strong>
+              <span class="mini-meta">0 mapped / 20 focused files</span>
+              <span class="coverage-bar"><span></span></span>
+              <span class="mini-meta">traits mentioned, internals not extracted</span>
+            </button>
+            <button class="source-node" data-source-key="docs-flow" style="--coverage: 0%;">
+              <strong>Docs and workflows</strong>
+              <span class="mini-meta">mapped conceptually, not tagged</span>
+              <span class="coverage-bar"><span></span></span>
+              <span class="mini-meta">docs explain behavior that flows into code modules</span>
+            </button>
+          </div>
+        </div>
+        <aside class="source-detail" aria-live="polite">
+          <h3 id="source-title">CLI core</h3>
+          <p id="source-summary">The extracted CLI path covers process entry, runner/bootstrap, command context, workspace context, snapshot/update orchestration, and transaction start metadata.</p>
+          <h3>Extracted Files And Anchors</h3>
+          <ul id="source-mapped" class="source-list"></ul>
+          <h3>Nearby Not Extracted</h3>
+          <ul id="source-unmapped" class="source-list"></ul>
+          <h3>Review</h3>
+          <p id="source-review" class="mini-meta">This slice is enough to trace command execution, but not enough to explain individual command implementation bodies.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <h2>Functionality To Code Flow</h2>
+      <p class="lede">
+        This maps JJ documentation and user-facing functionality back through
+        the extracted code modules. Select a workflow to see which docs explain
+        it, which source files carry it, and which reusable modules it builds.
+      </p>
+      <div class="function-layout">
+        <div class="function-browser">
+          <button class="function-card is-active" data-flow-key="run-command">
+            <strong>Run any JJ command</strong>
+            <span class="mini-meta">README / CLI reference to <code>CliRunner</code>, command registry, and <code>CommandHelper</code>.</span>
+          </button>
+          <button class="function-card" data-flow-key="status-snapshot">
+            <strong>Inspect status and snapshot working copy</strong>
+            <span class="mini-meta">Working-copy docs to snapshot, stale detection, and local working-copy persistence.</span>
+          </button>
+          <button class="function-card" data-flow-key="mutate-repo">
+            <strong>Create or rewrite commits</strong>
+            <span class="mini-meta">Operation-log model to <code>MutableRepo</code>, commit builders, and <code>Transaction</code>.</span>
+          </button>
+          <button class="function-card" data-flow-key="query-revisions">
+            <strong>Select commits with revsets</strong>
+            <span class="mini-meta">Revset docs to parser, symbol resolution, visibility, optimization, and index evaluation.</span>
+          </button>
+          <button class="function-card" data-flow-key="git-interop">
+            <strong>Use JJ with Git</strong>
+            <span class="mini-meta">Git compatibility docs to Git backend, import HEAD/refs, and export refs.</span>
+          </button>
+        </div>
+        <aside class="function-detail">
+          <h3 id="flow-title">Run any JJ command</h3>
+          <p id="flow-summary">The CLI lifecycle turns shell arguments into config, aliases, parsed command matches, command context, and eventually a command implementation.</p>
+          <dl>
+            <dt>Docs / user surface</dt>
+            <dd id="flow-docs"><code>README.md</code>, <code>docs/cli-reference.md</code>, <code>docs/config.md</code></dd>
+            <dt>Code flow</dt>
+            <dd id="flow-code"><code>main()</code> -> <code>CliRunner::init()</code> -> <code>CliRunner::run_internal()</code> -> <code>run_command()</code></dd>
+            <dt>Reusable modules</dt>
+            <dd id="flow-modules"><code>CliRunner</code>, <code>CommandHelper</code>, <code>Command</code></dd>
+            <dt>Marko group</dt>
+            <dd id="flow-groups"><code>jj-entry</code>, <code>jj-command-surface</code></dd>
+            <dt>Not covered by extraction</dt>
+            <dd id="flow-gap">Most individual command implementation files under <code>cli/src/commands/</code>.</dd>
+          </dl>
+        </aside>
       </div>
     </section>
 
@@ -952,6 +1286,17 @@ flowchart TD
       </div>
     </section>
   </main>
+  <div class="diagram-modal" id="diagram-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-surface" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h3 id="modal-title">Diagram</h3>
+        <button class="modal-close" type="button" data-modal-close>Close</button>
+      </div>
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+  </div>
+
   <script type="module">
     import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
     mermaid.initialize({
@@ -976,7 +1321,9 @@ flowchart TD
         groups: "`jj-entry`, `jj-command-surface`, `jj-working-copy-flow`",
         surfaces: "`CliRunner`, `CommandHelper`, `WorkspaceCommandHelper`, `start_repo_transaction`",
         doc: "Command lifecycle, frontend extension hooks, snapshot/update policy.",
-        anchors: "`cli/src/main.rs`, `cli/src/cli_util.rs`, `cli/src/commands/mod.rs`"
+        anchors: "`cli/src/main.rs`, `cli/src/cli_util.rs`, `cli/src/commands/mod.rs`",
+        extracted: "`cli/src/main.rs`, `cli/src/cli_util.rs`, `cli/src/commands/mod.rs`",
+        unmapped: "`cli/src/config.rs`, `cli/src/ui.rs`, templates, merge tools, individual command bodies"
       },
       commands: {
         title: "cli/src/commands/",
@@ -984,7 +1331,9 @@ flowchart TD
         groups: "`jj-command-surface`",
         surfaces: "`Command`, `default_app`, `run_command`",
         doc: "Command authoring, argument model, command-to-helper contracts.",
-        anchors: "`cli/src/commands/mod.rs`, `cli/src/commands/*.rs`"
+        anchors: "`cli/src/commands/mod.rs`, `cli/src/commands/*.rs`",
+        extracted: "`cli/src/commands/mod.rs` only",
+        unmapped: "`status.rs`, `log.rs`, `new.rs`, `git/*.rs`, `workspace/*.rs`, and most other command implementations"
       },
       lib: {
         title: "lib/",
@@ -992,7 +1341,9 @@ flowchart TD
         groups: "`jj-repo-transaction-flow`, `jj-query-flow`, `jj-working-copy-flow`, `jj-git-flow`",
         surfaces: "`RepoLoader`, `MutableRepo`, `Transaction`, `LocalWorkingCopy`, `GitBackend`, `revset::parse`",
         doc: "Library API boundaries, backend contracts, operation log write path.",
-        anchors: "`lib/src/repo.rs`, `lib/src/transaction.rs`, `lib/src/revset.rs`, `lib/src/local_working_copy.rs`, `lib/src/git.rs`"
+        anchors: "`lib/src/repo.rs`, `lib/src/transaction.rs`, `lib/src/revset.rs`, `lib/src/local_working_copy.rs`, `lib/src/git.rs`",
+        extracted: "`repo.rs`, `transaction.rs`, `revset.rs`, `local_working_copy.rs`, `git.rs`, `git_backend.rs`",
+        unmapped: "`backend.rs`, `store.rs`, `index.rs`, `workspace.rs`, `commit.rs`, default index internals, generated protos"
       },
       docs: {
         title: "docs/",
@@ -1000,7 +1351,9 @@ flowchart TD
         groups: "Mapping input, not Marko source anchors",
         surfaces: "`docs/technical/architecture.md`, glossary, working-copy docs, revset docs",
         doc: "Existing doc home for concepts that the HTML turns into component views.",
-        anchors: "`docs/technical/architecture.md`, `docs/working-copy.md`, `docs/revsets.md`"
+        anchors: "`docs/technical/architecture.md`, `docs/working-copy.md`, `docs/revsets.md`",
+        extracted: "Read into `MARKO_MAP.md`; not tagged with Marko anchors",
+        unmapped: "`docs/cli-reference.md`, `docs/tutorial.md`, `docs/config.md`, full per-command docs"
       },
       web: {
         title: "web/docs/",
@@ -1008,7 +1361,9 @@ flowchart TD
         groups: "No current Marko group",
         surfaces: "Astro components and custom styles",
         doc: "Potential publication surface for rendered architecture maps.",
-        anchors: "`web/docs/src/components/*.astro`, `web/docs/src/styles/custom.css`"
+        anchors: "`web/docs/src/components/*.astro`, `web/docs/src/styles/custom.css`",
+        extracted: "No current Marko extraction",
+        unmapped: "All Astro documentation-site implementation files"
       },
       marko: {
         title: "Marko map and bank",
@@ -1016,7 +1371,9 @@ flowchart TD
         groups: "`jj-entry`, `jj-command-surface`, `jj-working-copy-flow`, `jj-repo-transaction-flow`, `jj-query-flow`, `jj-git-flow`, `jj-reusable-bank`",
         surfaces: "`MARKO_MAP.md`, `.marks.toml`, `marko-bank/*.txt`, `jj-architecture-components.html`",
         doc: "Reusable component inventory and source-to-diagram traceability.",
-        anchors: "Marko tags embedded in `cli/` and `lib/` source files"
+        anchors: "Marko tags embedded in `cli/` and `lib/` source files",
+        extracted: "38 anchors pulled into 7 Marko groups and bank files",
+        unmapped: "Any source file without `@wrap` / `@flag` anchors remains outside the bank"
       }
     };
 
@@ -1026,7 +1383,9 @@ flowchart TD
       groups: document.getElementById("inspect-groups"),
       surfaces: document.getElementById("inspect-surfaces"),
       doc: document.getElementById("inspect-doc"),
-      anchors: document.getElementById("inspect-anchors")
+      anchors: document.getElementById("inspect-anchors"),
+      extracted: document.getElementById("inspect-extracted"),
+      unmapped: document.getElementById("inspect-unmapped")
     };
 
     function renderInlineCodes(text) {
@@ -1045,12 +1404,256 @@ flowchart TD
       fields.surfaces.innerHTML = renderInlineCodes(data.surfaces);
       fields.doc.textContent = data.doc;
       fields.anchors.innerHTML = renderInlineCodes(data.anchors);
+      fields.extracted.innerHTML = renderInlineCodes(data.extracted);
+      fields.unmapped.innerHTML = renderInlineCodes(data.unmapped);
     }
 
     document.querySelectorAll(".map-block").forEach((node) => {
       node.addEventListener("mouseenter", () => setActive(node.dataset.key));
       node.addEventListener("focus", () => setActive(node.dataset.key));
       node.addEventListener("click", () => setActive(node.dataset.key));
+    });
+
+    const sourceCoverage = {
+      "cli-core": {
+        title: "CLI core",
+        summary: "The extracted CLI path covers process entry, runner/bootstrap, command context, workspace context, snapshot/update orchestration, and transaction start metadata.",
+        mapped: [
+          ["cli/src/main.rs", "jj-cli-entry-main"],
+          ["cli/src/cli_util.rs", "jj-cli-command-helper, jj-cli-workspace-helper, jj-cli-snapshot-flow, jj-cli-start-transaction, jj-cli-stale-working-copy-flow, jj-cli-update-working-copy, jj-cli-runner, jj-cli-runner-init, jj-cli-run-internal, jj-cli-run"],
+          ["cli/src/commands/mod.rs", "jj-cli-command-registry, jj-cli-default-app, jj-cli-command-dispatch"]
+        ],
+        unmapped: [
+          ["cli/src/config.rs", "config implementation is used by runner but not extracted"],
+          ["cli/src/ui.rs", "terminal presentation is referenced conceptually, not tagged"],
+          ["cli/src/template_parser.rs", "template language implementation is outside current Marko flow"],
+          ["cli/src/git_util.rs", "CLI Git UI helpers are adjacent to lib Git flow"]
+        ],
+        review: "This slice is enough to trace command execution and workspace preparation. It is not a complete map of CLI presentation, templates, merge tools, or command bodies."
+      },
+      commands: {
+        title: "Command tree",
+        summary: "Only the registry and dispatch file is extracted. The individual commands are intentionally left as unmapped implementation leaves.",
+        mapped: [
+          ["cli/src/commands/mod.rs", "command enum, default app, dispatch"]
+        ],
+        unmapped: [
+          ["cli/src/commands/status.rs", "status command behavior"],
+          ["cli/src/commands/log.rs", "log rendering and revset consumption"],
+          ["cli/src/commands/new.rs", "new working-copy commit workflow"],
+          ["cli/src/commands/git/*.rs", "Git command surface over lib Git APIs"],
+          ["cli/src/commands/workspace/*.rs", "workspace command implementations"]
+        ],
+        review: "The extraction captures the command surface as an architectural boundary, but not the per-command product behavior. This is the biggest gap for a functionality-level map."
+      },
+      "lib-core": {
+        title: "Library flow core",
+        summary: "The extracted library files carry the main reusable implementation flow: load repo, mutate view/index state, write operations, query revsets, update working copy, and sync Git refs.",
+        mapped: [
+          ["lib/src/repo.rs", "RepoLoader, MutableRepo, new_commit, rewrite_commit"],
+          ["lib/src/transaction.rs", "Transaction::new, write, commit"],
+          ["lib/src/revset.rs", "parse, resolve symbols, resolve visibility, optimize"],
+          ["lib/src/local_working_copy.rs", "LocalWorkingCopy and locked mutation methods"],
+          ["lib/src/git.rs", "import_head, import_refs, export_refs"],
+          ["lib/src/git_backend.rs", "GitBackend and Backend trait implementation"]
+        ],
+        unmapped: [
+          ["lib/src/commit.rs", "commit object wrapper behavior"],
+          ["lib/src/store.rs", "store wrapper and caching"],
+          ["lib/src/backend.rs", "backend trait definitions"],
+          ["lib/src/index.rs", "index trait and evaluation boundary"],
+          ["lib/src/workspace.rs", "workspace type and checkout facade"]
+        ],
+        review: "This is the useful reusable-module core. The surrounding trait definitions and object wrappers should be tagged next if the goal is API documentation rather than flow tracing."
+      },
+      storage: {
+        title: "Storage and index internals",
+        summary: "The current Marko map names storage-independent backends, but it does not extract most backend/index internals.",
+        mapped: [
+          ["lib/src/git_backend.rs", "GitBackend adapter only"],
+          ["lib/src/git.rs", "high-level Git ref synchronization"]
+        ],
+        unmapped: [
+          ["lib/src/default_index/*.rs", "default index internals and revset engine"],
+          ["lib/src/simple_op_store.rs", "operation store implementation"],
+          ["lib/src/simple_op_heads_store.rs", "op-head storage"],
+          ["lib/src/stacked_table.rs", "storage format used by extra metadata"],
+          ["lib/src/protos/*.rs", "generated serialization support"]
+        ],
+        review: "This is deliberately low coverage. It tells readers where the storage boundary is, but not how the default index or operation storage actually works."
+      },
+      "docs-flow": {
+        title: "Docs and workflows",
+        summary: "JJ docs explain the product workflows that the source map then traces into CLI and library modules.",
+        mapped: [
+          ["docs/technical/architecture.md", "source architecture contract used by MARKO_MAP.md"],
+          ["docs/working-copy.md", "working-copy behavior mapped to snapshot/update flow"],
+          ["docs/revsets.md", "revset language mapped to parse/resolve/optimize flow"],
+          ["docs/git-compatibility.md", "Git behavior mapped to import/export and GitBackend"]
+        ],
+        unmapped: [
+          ["docs/cli-reference.md", "large command reference not linked per command"],
+          ["docs/tutorial.md", "user journey not traced command-by-command"],
+          ["docs/config.md", "configuration concepts not deeply mapped to config resolver"],
+          ["docs/operation-log.md", "operation log concepts only partly mapped to Transaction"]
+        ],
+        review: "The next best layer is a docs-to-command matrix: every documented workflow should link to command implementation, helper path, library module, and Marko group."
+      }
+    };
+
+    const sourceFields = {
+      title: document.getElementById("source-title"),
+      summary: document.getElementById("source-summary"),
+      mapped: document.getElementById("source-mapped"),
+      unmapped: document.getElementById("source-unmapped"),
+      review: document.getElementById("source-review")
+    };
+
+    function renderSourceList(items, className) {
+      return items.map(([path, note]) => `<li class="${className}"><code>${path}</code><small>${note}</small></li>`).join("");
+    }
+
+    function setSource(key) {
+      const data = sourceCoverage[key];
+      if (!data) return;
+      document.querySelectorAll(".source-node").forEach((node) => {
+        node.classList.toggle("is-active", node.dataset.sourceKey === key);
+      });
+      sourceFields.title.textContent = data.title;
+      sourceFields.summary.textContent = data.summary;
+      sourceFields.mapped.innerHTML = renderSourceList(data.mapped, "mapped");
+      sourceFields.unmapped.innerHTML = renderSourceList(data.unmapped, "unmapped");
+      sourceFields.review.textContent = data.review;
+    }
+
+    document.querySelectorAll(".source-node").forEach((node) => {
+      node.addEventListener("click", () => setSource(node.dataset.sourceKey));
+      node.addEventListener("focus", () => setSource(node.dataset.sourceKey));
+    });
+    setSource("cli-core");
+
+    const functionFlows = {
+      "run-command": {
+        title: "Run any JJ command",
+        summary: "The CLI lifecycle turns shell arguments into config, aliases, parsed command matches, command context, and eventually a command implementation.",
+        docs: "`README.md`, `docs/cli-reference.md`, `docs/config.md`",
+        code: "`main()` -> `CliRunner::init()` -> `CliRunner::run_internal()` -> `run_command()`",
+        modules: "`CliRunner`, `CommandHelper`, `Command`",
+        groups: "`jj-entry`, `jj-command-surface`",
+        gap: "Most individual command implementation files under `cli/src/commands/`."
+      },
+      "status-snapshot": {
+        title: "Inspect status and snapshot working copy",
+        summary: "Commands that need repository state prepare a workspace helper, optionally snapshot filesystem changes, handle stale working-copy state, and update checkout state.",
+        docs: "`docs/working-copy.md`, `docs/operation-log.md`, `docs/cli-reference.md`",
+        code: "`workspace_helper_with_stats()` -> `maybe_snapshot_impl()` -> `handle_stale_working_copy()` -> `LockedLocalWorkingCopy::snapshot()`",
+        modules: "`WorkspaceCommandHelper`, `LocalWorkingCopy`, `LockedWorkingCopy`",
+        groups: "`jj-working-copy-flow`, `jj-command-surface`",
+        gap: "The concrete `status` command body and tree-state implementation details are not extracted."
+      },
+      "mutate-repo": {
+        title: "Create or rewrite commits",
+        summary: "Repo mutations begin with operation metadata, mutate the repo view/index in memory, create or rewrite commits, then write and publish an operation.",
+        docs: "`docs/technical/architecture.md`, `docs/operation-log.md`, `docs/core_tenets.md`",
+        code: "`start_repo_transaction()` -> `MutableRepo::new_commit()` / `rewrite_commit()` -> `Transaction::write()` -> `Transaction::commit()`",
+        modules: "`RepoLoader`, `MutableRepo`, `CommitBuilder`, `Transaction`",
+        groups: "`jj-repo-transaction-flow`",
+        gap: "Commit object wrappers, store caching, rebase descendants, and per-command mutation policies are not fully extracted."
+      },
+      "query-revisions": {
+        title: "Select commits with revsets",
+        summary: "User revset strings are parsed, aliases are expanded, symbols are bound to commits/refs, visibility is resolved, and the expression is optimized before index evaluation.",
+        docs: "`docs/revsets.md`, `docs/cli-revision-options.md`, `docs/templates.md`",
+        code: "`revset::parse()` -> `resolve_symbols()` -> `resolve_visibility()` -> `optimize()` -> index evaluation",
+        modules: "`RevsetExpression`, `ResolvedExpression`, `Index`",
+        groups: "`jj-query-flow`",
+        gap: "The Pest grammar, revset parser helpers, and default index revset engine are not expanded in this map."
+      },
+      "git-interop": {
+        title: "Use JJ with Git",
+        summary: "Colocated Git workflows import Git HEAD/refs into the JJ view, use GitBackend for object storage, and export selected JJ refs back to Git.",
+        docs: "`docs/git-compatibility.md`, `docs/git-command-table.md`, `docs/github.md`",
+        code: "`import_head()` / `import_refs()` -> JJ repo view -> `export_refs()` -> `GitBackend`",
+        modules: "`GitBackend`, `git::import_refs`, `git::export_refs`",
+        groups: "`jj-git-flow`",
+        gap: "CLI `jj git ...` command files and lower-level git subprocess helpers are adjacent but not tagged."
+      }
+    };
+
+    const flowFields = {
+      title: document.getElementById("flow-title"),
+      summary: document.getElementById("flow-summary"),
+      docs: document.getElementById("flow-docs"),
+      code: document.getElementById("flow-code"),
+      modules: document.getElementById("flow-modules"),
+      groups: document.getElementById("flow-groups"),
+      gap: document.getElementById("flow-gap")
+    };
+
+    function setFlow(key) {
+      const data = functionFlows[key];
+      if (!data) return;
+      document.querySelectorAll(".function-card").forEach((node) => {
+        node.classList.toggle("is-active", node.dataset.flowKey === key);
+      });
+      flowFields.title.textContent = data.title;
+      flowFields.summary.textContent = data.summary;
+      flowFields.docs.innerHTML = renderInlineCodes(data.docs);
+      flowFields.code.innerHTML = renderInlineCodes(data.code);
+      flowFields.modules.innerHTML = renderInlineCodes(data.modules);
+      flowFields.groups.innerHTML = renderInlineCodes(data.groups);
+      flowFields.gap.innerHTML = renderInlineCodes(data.gap);
+    }
+
+    document.querySelectorAll(".function-card").forEach((node) => {
+      node.addEventListener("click", () => setFlow(node.dataset.flowKey));
+      node.addEventListener("focus", () => setFlow(node.dataset.flowKey));
+    });
+
+    const modal = document.getElementById("diagram-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalContent = document.getElementById("modal-content");
+
+    function openDiagram(panel) {
+      const title = panel.querySelector("h3")?.textContent?.trim() || "Diagram";
+      const diagram = panel.querySelector(".mermaid");
+      modalTitle.textContent = title;
+      modalContent.replaceChildren();
+      const renderedSvg = diagram?.querySelector("svg");
+      const clone = renderedSvg ? renderedSvg.cloneNode(true) : diagram.cloneNode(true);
+      modalContent.appendChild(clone);
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeDiagram() {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
+      modalContent.replaceChildren();
+      document.body.style.overflow = "";
+    }
+
+    document.querySelectorAll(".diagram-panel").forEach((panel) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "diagram-open";
+      button.textContent = "Open large";
+      button.addEventListener("click", () => openDiagram(panel));
+      panel.appendChild(button);
+      const hint = document.createElement("p");
+      hint.className = "diagram-hint";
+      hint.textContent = "Open the diagram to pan and inspect it at readable size.";
+      panel.appendChild(hint);
+    });
+
+    document.querySelectorAll("[data-modal-close]").forEach((node) => {
+      node.addEventListener("click", closeDiagram);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) {
+        closeDiagram();
+      }
     });
   </script>
 </body>
