@@ -1,0 +1,1660 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JJ Architecture Components</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f3;
+      --ink: #161a1d;
+      --muted: #5f666d;
+      --line: #d6dcd4;
+      --panel: #ffffff;
+      --panel-2: #eef4f7;
+      --accent: #0f766e;
+      --accent-2: #b45309;
+      --accent-3: #475569;
+      --code: #172033;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    header {
+      min-height: 84vh;
+      display: grid;
+      align-items: center;
+      padding: 48px clamp(20px, 5vw, 72px);
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(rgba(246, 247, 243, 0.78), rgba(246, 247, 243, 0.94)),
+        url("../docs/images/jj-logo.svg") right clamp(20px, 8vw, 120px) center / min(42vw, 480px) no-repeat;
+    }
+
+    header .eyebrow {
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 10px 0 18px;
+      font-size: clamp(2.7rem, 8vw, 7rem);
+      line-height: 0.94;
+      letter-spacing: 0;
+    }
+
+    header p {
+      max-width: 760px;
+      margin: 0;
+      color: #31383d;
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+    }
+
+    main {
+      padding: 0 clamp(20px, 5vw, 72px) 72px;
+    }
+
+    section {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 48px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(1.6rem, 3vw, 2.35rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    .lede {
+      max-width: 900px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      min-height: 180px;
+    }
+
+    .level {
+      display: inline-flex;
+      align-items: center;
+      min-width: 42px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #ddeee9;
+      color: #075f58;
+      font-size: 0.8rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .surface {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    code {
+      color: var(--code);
+      background: #e8ece9;
+      border: 1px solid #d8ded9;
+      border-radius: 5px;
+      padding: 1px 5px;
+      font-size: 0.9em;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .flow:first-of-type {
+      border-top: 0;
+    }
+
+    .flow-label {
+      font-weight: 800;
+      color: var(--accent-3);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      background: var(--panel-2);
+      border: 1px solid #d1dde3;
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 110px;
+    }
+
+    .steps strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .module-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .module-table th,
+    .module-table td {
+      text-align: left;
+      vertical-align: top;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .module-table th {
+      background: #e7eee9;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #354047;
+    }
+
+    .module-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .doc-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .doc-map article {
+      border-left: 5px solid var(--accent);
+      background: var(--panel);
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .tag-list span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 9px;
+      border: 1px solid #d9d1c3;
+      border-radius: 999px;
+      background: #fbf5ea;
+      color: #6b3f05;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .callout {
+      margin-top: 22px;
+      padding: 18px;
+      border: 1px solid #d7c7a8;
+      border-radius: 8px;
+      background: #fff8e8;
+    }
+
+    .repo-map {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      gap: 18px;
+      margin-top: 24px;
+      align-items: stretch;
+    }
+
+    .repo-canvas,
+    .inspector,
+    .diagram-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .repo-canvas {
+      min-height: 560px;
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .repo-canvas svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 520px;
+    }
+
+    .map-block {
+      cursor: pointer;
+      transition: opacity 120ms ease, transform 120ms ease;
+    }
+
+    .map-block rect {
+      stroke: rgba(22, 26, 29, 0.26);
+      stroke-width: 1.5;
+      rx: 8;
+    }
+
+    .map-block text {
+      pointer-events: none;
+      fill: #111827;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .map-block .sub {
+      fill: #374151;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .map-block:hover,
+    .map-block:focus {
+      opacity: 0.86;
+      outline: none;
+    }
+
+    .map-block.is-active rect {
+      stroke: #0f766e;
+      stroke-width: 4;
+    }
+
+    .mapped-badge {
+      fill: #fff7ed;
+      stroke: #b45309;
+      stroke-width: 1;
+    }
+
+    .mapped-text {
+      fill: #7c2d12;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .inspector {
+      padding: 20px;
+      min-height: 560px;
+    }
+
+    .inspector h3 {
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+    }
+
+    .inspector dl {
+      margin: 18px 0 0;
+    }
+
+    .inspector dt {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 14px;
+    }
+
+    .inspector dd {
+      margin: 4px 0 0;
+    }
+
+    .diagram-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .diagram-panel {
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .diagram-panel h3 {
+      margin-bottom: 10px;
+    }
+
+    .mermaid {
+      display: grid;
+      place-items: center;
+      min-height: 260px;
+      overflow: auto;
+      padding: 8px;
+      border-radius: 6px;
+      background: #fbfcfb;
+    }
+
+    .plantuml-note {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .source-layout,
+    .function-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
+      gap: 18px;
+      margin-top: 24px;
+      align-items: start;
+    }
+
+    .source-board,
+    .source-detail,
+    .function-browser,
+    .function-detail {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .source-node,
+    .function-card,
+    .diagram-open {
+      font: inherit;
+      text-align: left;
+      border: 1px solid #cbd5d1;
+      border-radius: 8px;
+      background: #fbfcfb;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .source-node,
+    .function-card {
+      display: block;
+      width: 100%;
+      min-height: 118px;
+      padding: 14px;
+    }
+
+    .source-node:hover,
+    .source-node:focus,
+    .source-node.is-active,
+    .function-card:hover,
+    .function-card:focus,
+    .function-card.is-active {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.13);
+    }
+
+    .source-node strong,
+    .function-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .coverage-bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+      margin: 12px 0 8px;
+    }
+
+    .coverage-bar span {
+      display: block;
+      height: 100%;
+      width: var(--coverage, 0%);
+      background: linear-gradient(90deg, #0f766e, #b45309);
+    }
+
+    .mini-meta {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .source-list {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .source-list li {
+      padding: 9px 10px;
+      border: 1px solid #dce3df;
+      border-radius: 7px;
+      background: #fbfcfb;
+      font-size: 0.92rem;
+    }
+
+    .source-list .mapped {
+      border-left: 5px solid var(--accent);
+    }
+
+    .source-list .unmapped {
+      border-left: 5px solid #9ca3af;
+    }
+
+    .source-list small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    .diagram-panel {
+      position: relative;
+    }
+
+    .diagram-open {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 10px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      background: #eef4f7;
+    }
+
+    .diagram-panel .mermaid {
+      margin-top: 22px;
+      min-height: 360px;
+    }
+
+    .diagram-panel[data-size="wide"] .mermaid {
+      min-height: 520px;
+    }
+
+    .diagram-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 50;
+    }
+
+    .diagram-modal.is-open {
+      display: block;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.58);
+    }
+
+    .modal-surface {
+      position: absolute;
+      inset: 32px;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #cbd5d1;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.28);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #f8faf7;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .modal-close {
+      border: 1px solid #cbd5d1;
+      border-radius: 7px;
+      background: #ffffff;
+      padding: 8px 12px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .modal-content {
+      overflow: auto;
+      padding: 22px;
+    }
+
+    .modal-content svg {
+      min-width: 1120px;
+      width: 100%;
+      height: auto;
+    }
+
+    .modal-content .mermaid {
+      min-width: 1120px;
+      min-height: 760px;
+      align-items: start;
+      justify-items: center;
+    }
+
+    .diagram-hint {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 760px) {
+      header {
+        min-height: 76vh;
+        background-position: right -80px bottom 40px;
+        background-size: 360px;
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .repo-map {
+        grid-template-columns: 1fr;
+      }
+
+      .source-layout,
+      .function-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-surface {
+        inset: 12px;
+      }
+
+      .module-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="eyebrow">Marko mapped source architecture</div>
+      <h1>JJ as reusable software components</h1>
+      <p>
+        A top-down reading of the Jujutsu source tree, mapped through the Marko
+        groups in <code>.marks.toml</code> and the extracted banks in
+        <code>marko-bank/</code>. The page shows the standalone modules, the
+        flow between them, and the documentation surfaces worth making explicit.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Architectural Stack</h2>
+      <p class="lede">
+        JJ splits user interaction from repository mechanics. The CLI crate owns
+        terminal behavior, argument parsing, configuration, command dispatch,
+        and presentation. The library crate owns the storage-independent model:
+        repositories, operations, indexes, revsets, working copies, and Git
+        interoperability.
+      </p>
+      <div class="grid">
+        <article class="card">
+          <span class="level">L0</span>
+          <h3>Product and concepts</h3>
+          <p>README, glossary, technical docs, working-copy docs, operation-log docs.</p>
+          <p class="surface">Doc surface: user vocabulary and invariants.</p>
+        </article>
+        <article class="card">
+          <span class="level">L1</span>
+          <h3>Binary entry</h3>
+          <p><code>cli/src/main.rs</code> constructs <code>CliRunner</code> and returns the process exit code.</p>
+          <p class="surface">Marko group: <code>jj-entry</code>.</p>
+        </article>
+        <article class="card">
+          <span class="level">L2</span>
+          <h3>CLI platform</h3>
+          <p><code>CliRunner</code> wires config layers, store factories, working-copy factories, extensions, and dispatch.</p>
+          <p class="surface">Reusable shell for frontends and embedded commands.</p>
+        </article>
+        <article class="card">
+          <span class="level">L3</span>
+          <h3>Command surface</h3>
+          <p><code>commands/mod.rs</code> defines the Clap command enum, default app, and dispatch boundary.</p>
+          <p class="surface">Marko group: <code>jj-command-surface</code>.</p>
+        </article>
+        <article class="card">
+          <span class="level">L4</span>
+          <h3>Repo mutation core</h3>
+          <p><code>RepoLoader</code>, <code>ReadonlyRepo</code>, <code>MutableRepo</code>, and <code>Transaction</code> form the operation-writing path.</p>
+          <p class="surface">Marko group: <code>jj-repo-transaction-flow</code>.</p>
+        </article>
+        <article class="card">
+          <span class="level">L5</span>
+          <h3>Query languages</h3>
+          <p>Revsets parse, resolve symbols, resolve visibility, optimize, then evaluate against the index.</p>
+          <p class="surface">Marko group: <code>jj-query-flow</code>.</p>
+        </article>
+        <article class="card">
+          <span class="level">L6</span>
+          <h3>Working-copy state</h3>
+          <p><code>WorkspaceCommandHelper</code> snapshots, detects staleness, and delegates checkout to <code>Workspace</code> and <code>LocalWorkingCopy</code>.</p>
+          <p class="surface">Marko group: <code>jj-working-copy-flow</code>.</p>
+        </article>
+        <article class="card">
+          <span class="level">L7-L8</span>
+          <h3>Backends and Git interop</h3>
+          <p>Commit, operation, op-head, index, submodule, and Git ref stores are swappable behind factories and traits.</p>
+          <p class="surface">Marko group: <code>jj-git-flow</code>.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Flow Through The Components</h2>
+      <p class="lede">
+        These flows build upward from standalone modules into complete JJ
+        behavior. Each step is anchored by a Marko tag and can be pulled from
+        source with <code>marko pull --group &lt;group&gt;</code>.
+      </p>
+
+      <div class="flow">
+        <div class="flow-label">Command execution</div>
+        <ol class="steps">
+          <li><strong>Entry</strong><code>main()</code> creates <code>CliRunner</code>.</li>
+          <li><strong>Bootstrap</strong><code>CliRunner::init()</code> installs config, factories, extensions, and default dispatch.</li>
+          <li><strong>Runtime</strong><code>run_internal()</code> loads config, expands aliases, parses args, and creates <code>CommandHelper</code>.</li>
+          <li><strong>Dispatch</strong><code>run_command()</code> routes to the command implementation.</li>
+        </ol>
+      </div>
+
+      <div class="flow">
+        <div class="flow-label">Workspace snapshot</div>
+        <ol class="steps">
+          <li><strong>Prepare</strong><code>workspace_helper_with_stats()</code> loads workspace and repo context.</li>
+          <li><strong>Lock</strong><code>maybe_snapshot_impl()</code> takes the Git import/export lock when needed.</li>
+          <li><strong>Freshness</strong><code>handle_stale_working_copy()</code> compares working-copy operation state with repo view state.</li>
+          <li><strong>Persist</strong><code>LockedLocalWorkingCopy::snapshot()</code> writes the new tree state.</li>
+        </ol>
+      </div>
+
+      <div class="flow">
+        <div class="flow-label">Repo transaction</div>
+        <ol class="steps">
+          <li><strong>Load</strong><code>RepoLoader::init_from_file_system()</code> creates stores from repo paths and factories.</li>
+          <li><strong>Mutate</strong><code>MutableRepo</code> owns mutable view, index, predecessor, and rewrite state.</li>
+          <li><strong>Build commits</strong><code>new_commit()</code> and <code>rewrite_commit()</code> return attached builders.</li>
+          <li><strong>Commit op</strong><code>Transaction::write()</code> writes view, operation, and index, then publishes through <code>commit()</code>.</li>
+        </ol>
+      </div>
+
+      <div class="flow">
+        <div class="flow-label">Revset query</div>
+        <ol class="steps">
+          <li><strong>Parse</strong><code>revset::parse()</code> parses syntax, expands aliases, and lowers expressions.</li>
+          <li><strong>Bind</strong><code>resolve_symbols()</code> maps names to commits, bookmarks, tags, and refs.</li>
+          <li><strong>Scope</strong><code>resolve_visibility()</code> inserts visible heads, root, and visibility bounds.</li>
+          <li><strong>Optimize</strong><code>optimize()</code> folds, flattens, and rewrites the expression before evaluation.</li>
+        </ol>
+      </div>
+
+      <div class="flow">
+        <div class="flow-label">Git interop</div>
+        <ol class="steps">
+          <li><strong>Object adapter</strong><code>GitBackend</code> implements JJ's commit backend over Git objects.</li>
+          <li><strong>Import HEAD</strong><code>import_head()</code> reconciles Git HEAD with JJ view state.</li>
+          <li><strong>Import refs</strong><code>import_refs()</code> brings Git refs into JJ bookmarks and tags.</li>
+          <li><strong>Export refs</strong><code>export_refs()</code> writes selected JJ view updates back to Git refs.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <h2>Reusable Module Bank</h2>
+      <p class="lede">
+        These modules are cohesive enough to document, test, and reuse as
+        standalone architectural parts. The last column names the surface where
+        the documentation should live.
+      </p>
+      <table class="module-table">
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Standalone contract</th>
+            <th>Primary source</th>
+            <th>Doc surface</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>CliRunner</code></td>
+            <td>Configurable CLI bootstrap with extension hooks and async dispatch.</td>
+            <td><code>cli/src/cli_util.rs</code></td>
+            <td>CLI embedding and command lifecycle.</td>
+          </tr>
+          <tr>
+            <td><code>CommandHelper</code></td>
+            <td>Command context boundary for cwd, args, settings, config, and workspace loading.</td>
+            <td><code>cli/src/cli_util.rs</code></td>
+            <td>Command authoring guide.</td>
+          </tr>
+          <tr>
+            <td><code>WorkspaceCommandHelper</code></td>
+            <td>Workspace/repo preparation with snapshot, Git import, and working-copy update policy.</td>
+            <td><code>cli/src/cli_util.rs</code></td>
+            <td>Working-copy lifecycle internals.</td>
+          </tr>
+          <tr>
+            <td><code>RepoLoader</code></td>
+            <td>Storage-independent loader over store factories and repo path layout.</td>
+            <td><code>lib/src/repo.rs</code></td>
+            <td>Backend and repository loading API.</td>
+          </tr>
+          <tr>
+            <td><code>MutableRepo</code></td>
+            <td>In-memory mutation model for view, index, commit predecessors, and rewrites.</td>
+            <td><code>lib/src/repo.rs</code></td>
+            <td>Repository mutation model.</td>
+          </tr>
+          <tr>
+            <td><code>Transaction</code></td>
+            <td>Operation metadata, view persistence, index persistence, and op-head publication.</td>
+            <td><code>lib/src/transaction.rs</code></td>
+            <td>Operation log write path.</td>
+          </tr>
+          <tr>
+            <td><code>revset::parse</code> and <code>optimize</code></td>
+            <td>DSL front end and transformation pipeline for commit-set queries.</td>
+            <td><code>lib/src/revset.rs</code></td>
+            <td>Revset implementation guide.</td>
+          </tr>
+          <tr>
+            <td><code>LocalWorkingCopy</code></td>
+            <td>Stateful filesystem mutation with locking, snapshot, checkout, and finish phases.</td>
+            <td><code>lib/src/local_working_copy.rs</code></td>
+            <td>Working-copy backend contract.</td>
+          </tr>
+          <tr>
+            <td><code>git::import_refs</code> and <code>export_refs</code></td>
+            <td>External reference synchronization between JJ view state and Git refs.</td>
+            <td><code>lib/src/git.rs</code></td>
+            <td>Git compatibility internals.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Marko Component Map</h2>
+      <p class="lede">
+        The group component macro file is <code>.marks.toml</code>. It gives the
+        source-level extraction handles that turn architecture concepts into
+        reusable banks.
+      </p>
+      <div class="doc-map">
+        <article>
+          <h3><code>jj-entry</code></h3>
+          <p>Pulls the binary entry and CLI runner lifecycle.</p>
+          <div class="tag-list">
+            <span>jj-cli-entry-main</span>
+            <span>jj-cli-runner</span>
+            <span>jj-cli-runner-init</span>
+            <span>jj-cli-run-internal</span>
+            <span>jj-cli-run</span>
+          </div>
+        </article>
+        <article>
+          <h3><code>jj-command-surface</code></h3>
+          <p>Pulls the command registry, command dispatch, and command context helpers.</p>
+          <div class="tag-list">
+            <span>jj-cli-command-registry</span>
+            <span>jj-cli-default-app</span>
+            <span>jj-cli-command-dispatch</span>
+            <span>jj-cli-command-helper</span>
+            <span>jj-cli-workspace-helper</span>
+          </div>
+        </article>
+        <article>
+          <h3><code>jj-working-copy-flow</code></h3>
+          <p>Pulls the snapshot, stale detection, checkout, and locked working-copy path.</p>
+          <div class="tag-list">
+            <span>jj-cli-snapshot-flow</span>
+            <span>jj-cli-stale-working-copy-flow</span>
+            <span>jj-lib-local-working-copy</span>
+            <span>jj-lib-working-copy-snapshot</span>
+          </div>
+        </article>
+        <article>
+          <h3><code>jj-repo-transaction-flow</code></h3>
+          <p>Pulls repository loading, mutable repo setup, commit builders, and transaction publication.</p>
+          <div class="tag-list">
+            <span>jj-lib-repo-loader</span>
+            <span>jj-lib-mutable-repo</span>
+            <span>jj-lib-transaction-write-operation</span>
+            <span>jj-lib-transaction-commit</span>
+          </div>
+        </article>
+        <article>
+          <h3><code>jj-query-flow</code></h3>
+          <p>Pulls the revset parse, symbol resolution, visibility resolution, and optimization pipeline.</p>
+          <div class="tag-list">
+            <span>jj-lib-revset-parse</span>
+            <span>jj-lib-revset-resolve-symbols</span>
+            <span>jj-lib-revset-resolve-visibility</span>
+            <span>jj-lib-revset-optimize</span>
+          </div>
+        </article>
+        <article>
+          <h3><code>jj-git-flow</code></h3>
+          <p>Pulls Git object storage, Git HEAD import, Git ref import, and Git ref export.</p>
+          <div class="tag-list">
+            <span>jj-lib-git-backend</span>
+            <span>jj-lib-git-import-head</span>
+            <span>jj-lib-git-import-refs</span>
+            <span>jj-lib-git-export-refs</span>
+          </div>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>Regeneration command:</strong>
+        <code>/Users/mm/Documents/dev/TGramm/marko/target/debug/marko pull --group jj-reusable-bank &gt; marko-bank/jj-reusable-bank.txt</code>
+      </div>
+    </section>
+
+    <section>
+      <h2>Whole Repository Map</h2>
+      <p class="lede">
+        This view treats the checkout as one software system. Hover or focus a
+        block to see how much of it is mapped by Marko, what it owns, and which
+        bank group connects it to the reusable component analysis.
+      </p>
+      <div class="repo-map">
+        <div class="repo-canvas" aria-label="Interactive repository component map">
+          <svg viewBox="0 0 980 640" role="img" aria-labelledby="repo-map-title">
+            <title id="repo-map-title">Jujutsu repository map with Marko-mapped parts</title>
+            <rect x="8" y="8" width="964" height="624" rx="14" fill="#f8faf7" stroke="#cfd7cf"></rect>
+            <text x="28" y="42" font-size="22" font-weight="900" fill="#111827">jj-source</text>
+            <text x="28" y="64" font-size="13" fill="#5f666d">Rust workspace, docs, web docs, demos, generated support, tests, Marko bank</text>
+
+            <g class="map-block is-active" tabindex="0" data-key="cli" transform="translate(32 92)">
+              <rect width="350" height="218" fill="#dbeafe"></rect>
+              <text x="18" y="34">cli/</text>
+              <text class="sub" x="18" y="58">binary, terminal UI, commands, config</text>
+              <rect class="mapped-badge" x="236" y="18" width="92" height="24" rx="12"></rect>
+              <text class="mapped-text" x="249" y="34">MARKO</text>
+              <rect x="18" y="88" width="145" height="90" rx="8" fill="#eff6ff" stroke="#93c5fd"></rect>
+              <text x="34" y="120">main.rs</text>
+              <text class="sub" x="34" y="144">entry</text>
+              <rect x="182" y="88" width="145" height="90" rx="8" fill="#eff6ff" stroke="#93c5fd"></rect>
+              <text x="198" y="120">cli_util.rs</text>
+              <text class="sub" x="198" y="144">runner/helpers</text>
+            </g>
+
+            <g class="map-block" tabindex="0" data-key="commands" transform="translate(414 92)">
+              <rect width="248" height="218" fill="#e0f2fe"></rect>
+              <text x="18" y="34">cli/src/commands/</text>
+              <text class="sub" x="18" y="58">command enum, dispatch, per-command behavior</text>
+              <rect class="mapped-badge" x="138" y="18" width="86" height="24" rx="12"></rect>
+              <text class="mapped-text" x="151" y="34">MARKO</text>
+              <rect x="18" y="88" width="92" height="90" rx="8" fill="#f0f9ff" stroke="#7dd3fc"></rect>
+              <text x="32" y="120">mod.rs</text>
+              <text class="sub" x="32" y="144">registry</text>
+              <rect x="128" y="88" width="92" height="90" rx="8" fill="#f0f9ff" stroke="#7dd3fc"></rect>
+              <text x="142" y="120">*.rs</text>
+              <text class="sub" x="142" y="144">commands</text>
+            </g>
+
+            <g class="map-block" tabindex="0" data-key="lib" transform="translate(694 92)">
+              <rect width="246" height="498" fill="#dcfce7"></rect>
+              <text x="18" y="34">lib/</text>
+              <text class="sub" x="18" y="58">storage-independent version-control core</text>
+              <rect class="mapped-badge" x="138" y="18" width="86" height="24" rx="12"></rect>
+              <text class="mapped-text" x="151" y="34">MARKO</text>
+              <rect x="18" y="84" width="92" height="80" rx="8" fill="#f0fdf4" stroke="#86efac"></rect>
+              <text x="32" y="114">repo</text>
+              <text class="sub" x="32" y="138">view/tx</text>
+              <rect x="128" y="84" width="92" height="80" rx="8" fill="#f0fdf4" stroke="#86efac"></rect>
+              <text x="142" y="114">revset</text>
+              <text class="sub" x="142" y="138">query DSL</text>
+              <rect x="18" y="188" width="92" height="80" rx="8" fill="#f0fdf4" stroke="#86efac"></rect>
+              <text x="32" y="218">working</text>
+              <text class="sub" x="32" y="242">copy</text>
+              <rect x="128" y="188" width="92" height="80" rx="8" fill="#f0fdf4" stroke="#86efac"></rect>
+              <text x="142" y="218">git</text>
+              <text class="sub" x="142" y="242">interop</text>
+              <rect x="18" y="292" width="202" height="80" rx="8" fill="#f0fdf4" stroke="#86efac"></rect>
+              <text x="32" y="322">backend/index/op stores</text>
+              <text class="sub" x="32" y="346">traits and storage adapters</text>
+            </g>
+
+            <g class="map-block" tabindex="0" data-key="docs" transform="translate(32 342)">
+              <rect width="206" height="248" fill="#fef3c7"></rect>
+              <text x="18" y="34">docs/</text>
+              <text class="sub" x="18" y="58">user docs and technical architecture</text>
+              <rect x="18" y="88" width="168" height="54" rx="8" fill="#fffbeb" stroke="#fbbf24"></rect>
+              <text x="34" y="121">architecture.md</text>
+              <rect x="18" y="160" width="168" height="54" rx="8" fill="#fffbeb" stroke="#fbbf24"></rect>
+              <text x="34" y="193">concept docs</text>
+            </g>
+
+            <g class="map-block" tabindex="0" data-key="web" transform="translate(270 342)">
+              <rect width="168" height="248" fill="#fae8ff"></rect>
+              <text x="18" y="34">web/docs/</text>
+              <text class="sub" x="18" y="58">Astro docs site shell</text>
+              <rect x="18" y="88" width="130" height="54" rx="8" fill="#fdf4ff" stroke="#e879f9"></rect>
+              <text x="34" y="121">components</text>
+              <rect x="18" y="160" width="130" height="54" rx="8" fill="#fdf4ff" stroke="#e879f9"></rect>
+              <text x="34" y="193">styles</text>
+            </g>
+
+            <g class="map-block" tabindex="0" data-key="marko" transform="translate(470 342)">
+              <rect width="192" height="248" fill="#ffedd5"></rect>
+              <text x="18" y="34">Marko bank</text>
+              <text class="sub" x="18" y="58">mapping, groups, extracted source banks</text>
+              <rect class="mapped-badge" x="84" y="18" width="86" height="24" rx="12"></rect>
+              <text class="mapped-text" x="97" y="34">OUTPUT</text>
+              <rect x="18" y="88" width="154" height="54" rx="8" fill="#fff7ed" stroke="#fdba74"></rect>
+              <text x="34" y="121">.marks.toml</text>
+              <rect x="18" y="160" width="154" height="54" rx="8" fill="#fff7ed" stroke="#fdba74"></rect>
+              <text x="34" y="193">marko-bank/*.txt</text>
+            </g>
+
+            <path d="M382 200 C430 200 438 200 414 200" stroke="#64748b" stroke-width="2" fill="none"></path>
+            <path d="M662 200 C680 200 680 200 694 200" stroke="#64748b" stroke-width="2" fill="none"></path>
+            <path d="M382 300 C520 392 560 260 694 300" stroke="#0f766e" stroke-width="3" fill="none"></path>
+            <path d="M238 456 C310 456 370 456 470 456" stroke="#b45309" stroke-width="2" fill="none" stroke-dasharray="6 6"></path>
+            <path d="M662 456 C676 456 680 456 694 456" stroke="#b45309" stroke-width="2" fill="none" stroke-dasharray="6 6"></path>
+          </svg>
+        </div>
+        <aside class="inspector" aria-live="polite">
+          <h3 id="inspect-title">cli/</h3>
+          <p id="inspect-summary">The user-facing application shell: process entry, command parsing, terminal UI, config loading, workspace/repo preparation, and command dispatch.</p>
+          <dl>
+            <dt>Mapped groups</dt>
+            <dd id="inspect-groups"><code>jj-entry</code>, <code>jj-command-surface</code>, <code>jj-working-copy-flow</code></dd>
+            <dt>Reusable surfaces</dt>
+            <dd id="inspect-surfaces"><code>CliRunner</code>, <code>CommandHelper</code>, <code>WorkspaceCommandHelper</code>, <code>start_repo_transaction</code></dd>
+            <dt>Documentation target</dt>
+            <dd id="inspect-doc">Command lifecycle, frontend extension hooks, snapshot/update policy.</dd>
+            <dt>Source anchors</dt>
+            <dd id="inspect-anchors"><code>cli/src/main.rs</code>, <code>cli/src/cli_util.rs</code>, <code>cli/src/commands/mod.rs</code></dd>
+            <dt>Extracted source</dt>
+            <dd id="inspect-extracted"><code>cli/src/main.rs</code>, <code>cli/src/cli_util.rs</code>, <code>cli/src/commands/mod.rs</code></dd>
+            <dt>Not extracted nearby</dt>
+            <dd id="inspect-unmapped"><code>cli/src/config.rs</code>, <code>cli/src/ui.rs</code>, individual command files</dd>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <h2>Repository Relations</h2>
+      <p class="lede">
+        The whole-repo diagram shows the major data and control path: CLI entry
+        creates command context, command context prepares workspace state,
+        workspace state starts transactions against the library core, and Git
+        interop synchronizes selected external refs.
+      </p>
+      <div class="diagram-panel" data-size="wide">
+        <h3>Whole JJ Architecture</h3>
+        <div class="mermaid">
+flowchart LR
+  User[User shell] --> Main[cli/src/main.rs]
+  Main --> Runner[CliRunner]
+  Runner --> Config[Config + aliases]
+  Runner --> Commands[Command registry]
+  Commands --> Helper[CommandHelper]
+  Helper --> Workspace[WorkspaceCommandHelper]
+  Workspace --> Snapshot[Snapshot + stale check]
+  Snapshot --> WC[LocalWorkingCopy]
+  Helper --> Tx[start_repo_transaction]
+  Tx --> Mutable[MutableRepo]
+  Mutable --> Transaction[Transaction write/commit]
+  Transaction --> OpLog[Operation log]
+  Transaction --> View[Repo view]
+  Helper --> Revsets[Revset parse/resolve/optimize]
+  Revsets --> Index[Index evaluate]
+  Workspace --> GitImport[Git import refs/HEAD]
+  Transaction --> GitExport[Git export refs]
+  GitImport --> GitBackend[GitBackend]
+  GitExport --> GitBackend
+  GitBackend --> GitRepo[(Git object store)]
+        </div>
+        <p class="plantuml-note">
+          PlantUML equivalent: model the same nodes as components with arrows
+          from <code>CliRunner</code> to <code>CommandHelper</code>,
+          <code>WorkspaceCommandHelper</code>, <code>MutableRepo</code>,
+          <code>Transaction</code>, <code>LocalWorkingCopy</code>, and
+          <code>GitBackend</code>.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Source Coverage Map</h2>
+      <p class="lede">
+        The Marko extraction is a focused trace through JJ's architecture, not a
+        full-source index. This view maps the extracted components back to real
+        repository files and shows the unmapped surface around them.
+      </p>
+      <div class="source-layout">
+        <div class="source-board">
+          <h3>Mapped Versus Unmapped Source</h3>
+          <p class="mini-meta">Coverage in <code>cli/src</code> and <code>lib/src</code>: 9 mapped files / 281 source files, with 38 Marko anchors.</p>
+          <div class="source-grid">
+            <button class="source-node is-active" data-source-key="cli-core" style="--coverage: 21%;">
+              <strong>CLI core</strong>
+              <span class="mini-meta">3 mapped / 14 core files</span>
+              <span class="coverage-bar"><span></span></span>
+              <span class="mini-meta">entry, runner, config/workspace helper surface</span>
+            </button>
+            <button class="source-node" data-source-key="commands" style="--coverage: 1%;">
+              <strong>Command tree</strong>
+              <span class="mini-meta">1 mapped / 134 command files</span>
+              <span class="coverage-bar"><span></span></span>
+              <span class="mini-meta">registry mapped; individual commands mostly unmapped</span>
+            </button>
+            <button class="source-node" data-source-key="lib-core" style="--coverage: 23%;">
+              <strong>Library flow core</strong>
+              <span class="mini-meta">6 mapped / 26 architectural files</span>
+              <span class="coverage-bar"><span></span></span>
+              <span class="mini-meta">repo, transaction, revset, working copy, Git</span>
+            </button>
+            <button class="source-node" data-source-key="storage" style="--coverage: 0%;">
+              <strong>Storage and index internals</strong>
+              <span class="mini-meta">0 mapped / 20 focused files</span>
+              <span class="coverage-bar"><span></span></span>
+              <span class="mini-meta">traits mentioned, internals not extracted</span>
+            </button>
+            <button class="source-node" data-source-key="docs-flow" style="--coverage: 0%;">
+              <strong>Docs and workflows</strong>
+              <span class="mini-meta">mapped conceptually, not tagged</span>
+              <span class="coverage-bar"><span></span></span>
+              <span class="mini-meta">docs explain behavior that flows into code modules</span>
+            </button>
+          </div>
+        </div>
+        <aside class="source-detail" aria-live="polite">
+          <h3 id="source-title">CLI core</h3>
+          <p id="source-summary">The extracted CLI path covers process entry, runner/bootstrap, command context, workspace context, snapshot/update orchestration, and transaction start metadata.</p>
+          <h3>Extracted Files And Anchors</h3>
+          <ul id="source-mapped" class="source-list"></ul>
+          <h3>Nearby Not Extracted</h3>
+          <ul id="source-unmapped" class="source-list"></ul>
+          <h3>Review</h3>
+          <p id="source-review" class="mini-meta">This slice is enough to trace command execution, but not enough to explain individual command implementation bodies.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <h2>Functionality To Code Flow</h2>
+      <p class="lede">
+        This maps JJ documentation and user-facing functionality back through
+        the extracted code modules. Select a workflow to see which docs explain
+        it, which source files carry it, and which reusable modules it builds.
+      </p>
+      <div class="function-layout">
+        <div class="function-browser">
+          <button class="function-card is-active" data-flow-key="run-command">
+            <strong>Run any JJ command</strong>
+            <span class="mini-meta">README / CLI reference to <code>CliRunner</code>, command registry, and <code>CommandHelper</code>.</span>
+          </button>
+          <button class="function-card" data-flow-key="status-snapshot">
+            <strong>Inspect status and snapshot working copy</strong>
+            <span class="mini-meta">Working-copy docs to snapshot, stale detection, and local working-copy persistence.</span>
+          </button>
+          <button class="function-card" data-flow-key="mutate-repo">
+            <strong>Create or rewrite commits</strong>
+            <span class="mini-meta">Operation-log model to <code>MutableRepo</code>, commit builders, and <code>Transaction</code>.</span>
+          </button>
+          <button class="function-card" data-flow-key="query-revisions">
+            <strong>Select commits with revsets</strong>
+            <span class="mini-meta">Revset docs to parser, symbol resolution, visibility, optimization, and index evaluation.</span>
+          </button>
+          <button class="function-card" data-flow-key="git-interop">
+            <strong>Use JJ with Git</strong>
+            <span class="mini-meta">Git compatibility docs to Git backend, import HEAD/refs, and export refs.</span>
+          </button>
+        </div>
+        <aside class="function-detail">
+          <h3 id="flow-title">Run any JJ command</h3>
+          <p id="flow-summary">The CLI lifecycle turns shell arguments into config, aliases, parsed command matches, command context, and eventually a command implementation.</p>
+          <dl>
+            <dt>Docs / user surface</dt>
+            <dd id="flow-docs"><code>README.md</code>, <code>docs/cli-reference.md</code>, <code>docs/config.md</code></dd>
+            <dt>Code flow</dt>
+            <dd id="flow-code"><code>main()</code> -> <code>CliRunner::init()</code> -> <code>CliRunner::run_internal()</code> -> <code>run_command()</code></dd>
+            <dt>Reusable modules</dt>
+            <dd id="flow-modules"><code>CliRunner</code>, <code>CommandHelper</code>, <code>Command</code></dd>
+            <dt>Marko group</dt>
+            <dd id="flow-groups"><code>jj-entry</code>, <code>jj-command-surface</code></dd>
+            <dt>Not covered by extraction</dt>
+            <dd id="flow-gap">Most individual command implementation files under <code>cli/src/commands/</code>.</dd>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <h2>Internal Marko Group Diagrams</h2>
+      <p class="lede">
+        Each group below is an extraction boundary from <code>.marks.toml</code>.
+        The diagrams show the in-between relation of the tagged components
+        instead of only listing them as table rows.
+      </p>
+      <div class="diagram-grid">
+        <article class="diagram-panel">
+          <h3><code>jj-entry</code></h3>
+          <div class="mermaid">
+flowchart TD
+  Main["jj-cli-entry-main<br/>main()"] --> Runner["jj-cli-runner<br/>CliRunner"]
+  Runner --> Init["jj-cli-runner-init<br/>init defaults"]
+  Init --> Run["jj-cli-run<br/>Ui + env config"]
+  Run --> Internal["jj-cli-run-internal<br/>load config, parse args"]
+  Internal --> Dispatch["dispatch hook chain"]
+          </div>
+        </article>
+        <article class="diagram-panel">
+          <h3><code>jj-command-surface</code></h3>
+          <div class="mermaid">
+flowchart TD
+  Registry["jj-cli-command-registry<br/>Command enum"] --> App["jj-cli-default-app<br/>clap app"]
+  App --> Dispatch["jj-cli-command-dispatch<br/>run_command"]
+  Dispatch --> Helper["jj-cli-command-helper<br/>CommandHelper"]
+  Helper --> Workspace["jj-cli-workspace-helper<br/>workspace/repo context"]
+          </div>
+        </article>
+        <article class="diagram-panel">
+          <h3><code>jj-working-copy-flow</code></h3>
+          <div class="mermaid">
+flowchart TD
+  Snapshot["jj-cli-snapshot-flow"] --> GitLock["Git import/export lock"]
+  Snapshot --> Stale["jj-cli-stale-working-copy-flow"]
+  Stale --> Local["jj-lib-local-working-copy"]
+  Local --> Lock["jj-lib-working-copy-start-mutation"]
+  Lock --> Snap["jj-lib-working-copy-snapshot"]
+  Lock --> Checkout["jj-lib-working-copy-checkout"]
+  Snap --> Finish["jj-lib-working-copy-finish"]
+  Checkout --> Finish
+  Snapshot --> Update["jj-cli-update-working-copy"]
+  Update --> Checkout
+          </div>
+        </article>
+        <article class="diagram-panel">
+          <h3><code>jj-repo-transaction-flow</code></h3>
+          <div class="mermaid">
+flowchart TD
+  Start["jj-cli-start-transaction"] --> Loader["jj-lib-repo-loader"]
+  Loader --> LoadFS["jj-lib-repo-load-from-fs"]
+  LoadFS --> Mutable["jj-lib-mutable-repo"]
+  Mutable --> NewMutable["jj-lib-mutable-repo-new"]
+  Mutable --> NewCommit["jj-lib-new-commit"]
+  Mutable --> Rewrite["jj-lib-rewrite-commit"]
+  NewCommit --> TxNew["jj-lib-transaction-new"]
+  Rewrite --> TxNew
+  TxNew --> Write["jj-lib-transaction-write-operation"]
+  Write --> Commit["jj-lib-transaction-commit"]
+          </div>
+        </article>
+        <article class="diagram-panel">
+          <h3><code>jj-query-flow</code></h3>
+          <div class="mermaid">
+flowchart LR
+  Text[User revset text] --> Parse["jj-lib-revset-parse"]
+  Parse --> Symbols["jj-lib-revset-resolve-symbols"]
+  Symbols --> Visibility["jj-lib-revset-resolve-visibility"]
+  Visibility --> Optimize["jj-lib-revset-optimize"]
+  Optimize --> IndexEval[Index-backed evaluation]
+          </div>
+        </article>
+        <article class="diagram-panel">
+          <h3><code>jj-git-flow</code></h3>
+          <div class="mermaid">
+flowchart TD
+  GitRepo[(Git repository)] --> Backend["jj-lib-git-backend"]
+  Backend --> Trait["jj-lib-git-backend-trait-impl"]
+  GitRepo --> Head["jj-lib-git-import-head"]
+  GitRepo --> ImportRefs["jj-lib-git-import-refs"]
+  Head --> View[JJ repo view]
+  ImportRefs --> View
+  View --> ExportRefs["jj-lib-git-export-refs"]
+  ExportRefs --> GitRepo
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+  <div class="diagram-modal" id="diagram-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-surface" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h3 id="modal-title">Diagram</h3>
+        <button class="modal-close" type="button" data-modal-close>Close</button>
+      </div>
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: "loose",
+      theme: "base",
+      themeVariables: {
+        primaryColor: "#eef4f7",
+        primaryTextColor: "#161a1d",
+        primaryBorderColor: "#8aa0aa",
+        lineColor: "#64748b",
+        secondaryColor: "#fff8e8",
+        tertiaryColor: "#f0fdf4"
+      }
+    });
+  </script>
+  <script>
+    const repoParts = {
+      cli: {
+        title: "cli/",
+        summary: "The user-facing application shell: process entry, command parsing, terminal UI, config loading, workspace/repo preparation, and command dispatch.",
+        groups: "`jj-entry`, `jj-command-surface`, `jj-working-copy-flow`",
+        surfaces: "`CliRunner`, `CommandHelper`, `WorkspaceCommandHelper`, `start_repo_transaction`",
+        doc: "Command lifecycle, frontend extension hooks, snapshot/update policy.",
+        anchors: "`cli/src/main.rs`, `cli/src/cli_util.rs`, `cli/src/commands/mod.rs`",
+        extracted: "`cli/src/main.rs`, `cli/src/cli_util.rs`, `cli/src/commands/mod.rs`",
+        unmapped: "`cli/src/config.rs`, `cli/src/ui.rs`, templates, merge tools, individual command bodies"
+      },
+      commands: {
+        title: "cli/src/commands/",
+        summary: "The user-visible command layer. It defines the Clap command enum, default command app, dispatch function, and per-command modules.",
+        groups: "`jj-command-surface`",
+        surfaces: "`Command`, `default_app`, `run_command`",
+        doc: "Command authoring, argument model, command-to-helper contracts.",
+        anchors: "`cli/src/commands/mod.rs`, `cli/src/commands/*.rs`",
+        extracted: "`cli/src/commands/mod.rs` only",
+        unmapped: "`status.rs`, `log.rs`, `new.rs`, `git/*.rs`, `workspace/*.rs`, and most other command implementations"
+      },
+      lib: {
+        title: "lib/",
+        summary: "The storage-independent version-control core: repository views, transactions, commits, trees, revsets, indexes, working-copy state, and Git adapters.",
+        groups: "`jj-repo-transaction-flow`, `jj-query-flow`, `jj-working-copy-flow`, `jj-git-flow`",
+        surfaces: "`RepoLoader`, `MutableRepo`, `Transaction`, `LocalWorkingCopy`, `GitBackend`, `revset::parse`",
+        doc: "Library API boundaries, backend contracts, operation log write path.",
+        anchors: "`lib/src/repo.rs`, `lib/src/transaction.rs`, `lib/src/revset.rs`, `lib/src/local_working_copy.rs`, `lib/src/git.rs`",
+        extracted: "`repo.rs`, `transaction.rs`, `revset.rs`, `local_working_copy.rs`, `git.rs`, `git_backend.rs`",
+        unmapped: "`backend.rs`, `store.rs`, `index.rs`, `workspace.rs`, `commit.rs`, default index internals, generated protos"
+      },
+      docs: {
+        title: "docs/",
+        summary: "User-facing and technical documentation. The architecture doc defines the main library/CLI split and storage-independent backend model.",
+        groups: "Mapping input, not Marko source anchors",
+        surfaces: "`docs/technical/architecture.md`, glossary, working-copy docs, revset docs",
+        doc: "Existing doc home for concepts that the HTML turns into component views.",
+        anchors: "`docs/technical/architecture.md`, `docs/working-copy.md`, `docs/revsets.md`",
+        extracted: "Read into `MARKO_MAP.md`; not tagged with Marko anchors",
+        unmapped: "`docs/cli-reference.md`, `docs/tutorial.md`, `docs/config.md`, full per-command docs"
+      },
+      web: {
+        title: "web/docs/",
+        summary: "Astro/Starlight documentation site shell. It is not part of the Marko extraction flow, but it is a natural publishing target.",
+        groups: "No current Marko group",
+        surfaces: "Astro components and custom styles",
+        doc: "Potential publication surface for rendered architecture maps.",
+        anchors: "`web/docs/src/components/*.astro`, `web/docs/src/styles/custom.css`",
+        extracted: "No current Marko extraction",
+        unmapped: "All Astro documentation-site implementation files"
+      },
+      marko: {
+        title: "Marko map and bank",
+        summary: "The analysis layer added on top of JJ source: `.marks.toml` groups, source anchors, `MARKO_MAP.md`, extracted bank files, provenance, and this HTML page.",
+        groups: "`jj-entry`, `jj-command-surface`, `jj-working-copy-flow`, `jj-repo-transaction-flow`, `jj-query-flow`, `jj-git-flow`, `jj-reusable-bank`",
+        surfaces: "`MARKO_MAP.md`, `.marks.toml`, `marko-bank/*.txt`, `jj-architecture-components.html`",
+        doc: "Reusable component inventory and source-to-diagram traceability.",
+        anchors: "Marko tags embedded in `cli/` and `lib/` source files",
+        extracted: "38 anchors pulled into 7 Marko groups and bank files",
+        unmapped: "Any source file without `@wrap` / `@flag` anchors remains outside the bank"
+      }
+    };
+
+    const fields = {
+      title: document.getElementById("inspect-title"),
+      summary: document.getElementById("inspect-summary"),
+      groups: document.getElementById("inspect-groups"),
+      surfaces: document.getElementById("inspect-surfaces"),
+      doc: document.getElementById("inspect-doc"),
+      anchors: document.getElementById("inspect-anchors"),
+      extracted: document.getElementById("inspect-extracted"),
+      unmapped: document.getElementById("inspect-unmapped")
+    };
+
+    function renderInlineCodes(text) {
+      return text.replace(/`([^`]+)`/g, "<code>$1</code>");
+    }
+
+    function setActive(key) {
+      const data = repoParts[key];
+      if (!data) return;
+      document.querySelectorAll(".map-block").forEach((node) => {
+        node.classList.toggle("is-active", node.dataset.key === key);
+      });
+      fields.title.textContent = data.title;
+      fields.summary.textContent = data.summary;
+      fields.groups.innerHTML = renderInlineCodes(data.groups);
+      fields.surfaces.innerHTML = renderInlineCodes(data.surfaces);
+      fields.doc.textContent = data.doc;
+      fields.anchors.innerHTML = renderInlineCodes(data.anchors);
+      fields.extracted.innerHTML = renderInlineCodes(data.extracted);
+      fields.unmapped.innerHTML = renderInlineCodes(data.unmapped);
+    }
+
+    document.querySelectorAll(".map-block").forEach((node) => {
+      node.addEventListener("mouseenter", () => setActive(node.dataset.key));
+      node.addEventListener("focus", () => setActive(node.dataset.key));
+      node.addEventListener("click", () => setActive(node.dataset.key));
+    });
+
+    const sourceCoverage = {
+      "cli-core": {
+        title: "CLI core",
+        summary: "The extracted CLI path covers process entry, runner/bootstrap, command context, workspace context, snapshot/update orchestration, and transaction start metadata.",
+        mapped: [
+          ["cli/src/main.rs", "jj-cli-entry-main"],
+          ["cli/src/cli_util.rs", "jj-cli-command-helper, jj-cli-workspace-helper, jj-cli-snapshot-flow, jj-cli-start-transaction, jj-cli-stale-working-copy-flow, jj-cli-update-working-copy, jj-cli-runner, jj-cli-runner-init, jj-cli-run-internal, jj-cli-run"],
+          ["cli/src/commands/mod.rs", "jj-cli-command-registry, jj-cli-default-app, jj-cli-command-dispatch"]
+        ],
+        unmapped: [
+          ["cli/src/config.rs", "config implementation is used by runner but not extracted"],
+          ["cli/src/ui.rs", "terminal presentation is referenced conceptually, not tagged"],
+          ["cli/src/template_parser.rs", "template language implementation is outside current Marko flow"],
+          ["cli/src/git_util.rs", "CLI Git UI helpers are adjacent to lib Git flow"]
+        ],
+        review: "This slice is enough to trace command execution and workspace preparation. It is not a complete map of CLI presentation, templates, merge tools, or command bodies."
+      },
+      commands: {
+        title: "Command tree",
+        summary: "Only the registry and dispatch file is extracted. The individual commands are intentionally left as unmapped implementation leaves.",
+        mapped: [
+          ["cli/src/commands/mod.rs", "command enum, default app, dispatch"]
+        ],
+        unmapped: [
+          ["cli/src/commands/status.rs", "status command behavior"],
+          ["cli/src/commands/log.rs", "log rendering and revset consumption"],
+          ["cli/src/commands/new.rs", "new working-copy commit workflow"],
+          ["cli/src/commands/git/*.rs", "Git command surface over lib Git APIs"],
+          ["cli/src/commands/workspace/*.rs", "workspace command implementations"]
+        ],
+        review: "The extraction captures the command surface as an architectural boundary, but not the per-command product behavior. This is the biggest gap for a functionality-level map."
+      },
+      "lib-core": {
+        title: "Library flow core",
+        summary: "The extracted library files carry the main reusable implementation flow: load repo, mutate view/index state, write operations, query revsets, update working copy, and sync Git refs.",
+        mapped: [
+          ["lib/src/repo.rs", "RepoLoader, MutableRepo, new_commit, rewrite_commit"],
+          ["lib/src/transaction.rs", "Transaction::new, write, commit"],
+          ["lib/src/revset.rs", "parse, resolve symbols, resolve visibility, optimize"],
+          ["lib/src/local_working_copy.rs", "LocalWorkingCopy and locked mutation methods"],
+          ["lib/src/git.rs", "import_head, import_refs, export_refs"],
+          ["lib/src/git_backend.rs", "GitBackend and Backend trait implementation"]
+        ],
+        unmapped: [
+          ["lib/src/commit.rs", "commit object wrapper behavior"],
+          ["lib/src/store.rs", "store wrapper and caching"],
+          ["lib/src/backend.rs", "backend trait definitions"],
+          ["lib/src/index.rs", "index trait and evaluation boundary"],
+          ["lib/src/workspace.rs", "workspace type and checkout facade"]
+        ],
+        review: "This is the useful reusable-module core. The surrounding trait definitions and object wrappers should be tagged next if the goal is API documentation rather than flow tracing."
+      },
+      storage: {
+        title: "Storage and index internals",
+        summary: "The current Marko map names storage-independent backends, but it does not extract most backend/index internals.",
+        mapped: [
+          ["lib/src/git_backend.rs", "GitBackend adapter only"],
+          ["lib/src/git.rs", "high-level Git ref synchronization"]
+        ],
+        unmapped: [
+          ["lib/src/default_index/*.rs", "default index internals and revset engine"],
+          ["lib/src/simple_op_store.rs", "operation store implementation"],
+          ["lib/src/simple_op_heads_store.rs", "op-head storage"],
+          ["lib/src/stacked_table.rs", "storage format used by extra metadata"],
+          ["lib/src/protos/*.rs", "generated serialization support"]
+        ],
+        review: "This is deliberately low coverage. It tells readers where the storage boundary is, but not how the default index or operation storage actually works."
+      },
+      "docs-flow": {
+        title: "Docs and workflows",
+        summary: "JJ docs explain the product workflows that the source map then traces into CLI and library modules.",
+        mapped: [
+          ["docs/technical/architecture.md", "source architecture contract used by MARKO_MAP.md"],
+          ["docs/working-copy.md", "working-copy behavior mapped to snapshot/update flow"],
+          ["docs/revsets.md", "revset language mapped to parse/resolve/optimize flow"],
+          ["docs/git-compatibility.md", "Git behavior mapped to import/export and GitBackend"]
+        ],
+        unmapped: [
+          ["docs/cli-reference.md", "large command reference not linked per command"],
+          ["docs/tutorial.md", "user journey not traced command-by-command"],
+          ["docs/config.md", "configuration concepts not deeply mapped to config resolver"],
+          ["docs/operation-log.md", "operation log concepts only partly mapped to Transaction"]
+        ],
+        review: "The next best layer is a docs-to-command matrix: every documented workflow should link to command implementation, helper path, library module, and Marko group."
+      }
+    };
+
+    const sourceFields = {
+      title: document.getElementById("source-title"),
+      summary: document.getElementById("source-summary"),
+      mapped: document.getElementById("source-mapped"),
+      unmapped: document.getElementById("source-unmapped"),
+      review: document.getElementById("source-review")
+    };
+
+    function renderSourceList(items, className) {
+      return items.map(([path, note]) => `<li class="${className}"><code>${path}</code><small>${note}</small></li>`).join("");
+    }
+
+    function setSource(key) {
+      const data = sourceCoverage[key];
+      if (!data) return;
+      document.querySelectorAll(".source-node").forEach((node) => {
+        node.classList.toggle("is-active", node.dataset.sourceKey === key);
+      });
+      sourceFields.title.textContent = data.title;
+      sourceFields.summary.textContent = data.summary;
+      sourceFields.mapped.innerHTML = renderSourceList(data.mapped, "mapped");
+      sourceFields.unmapped.innerHTML = renderSourceList(data.unmapped, "unmapped");
+      sourceFields.review.textContent = data.review;
+    }
+
+    document.querySelectorAll(".source-node").forEach((node) => {
+      node.addEventListener("click", () => setSource(node.dataset.sourceKey));
+      node.addEventListener("focus", () => setSource(node.dataset.sourceKey));
+    });
+    setSource("cli-core");
+
+    const functionFlows = {
+      "run-command": {
+        title: "Run any JJ command",
+        summary: "The CLI lifecycle turns shell arguments into config, aliases, parsed command matches, command context, and eventually a command implementation.",
+        docs: "`README.md`, `docs/cli-reference.md`, `docs/config.md`",
+        code: "`main()` -> `CliRunner::init()` -> `CliRunner::run_internal()` -> `run_command()`",
+        modules: "`CliRunner`, `CommandHelper`, `Command`",
+        groups: "`jj-entry`, `jj-command-surface`",
+        gap: "Most individual command implementation files under `cli/src/commands/`."
+      },
+      "status-snapshot": {
+        title: "Inspect status and snapshot working copy",
+        summary: "Commands that need repository state prepare a workspace helper, optionally snapshot filesystem changes, handle stale working-copy state, and update checkout state.",
+        docs: "`docs/working-copy.md`, `docs/operation-log.md`, `docs/cli-reference.md`",
+        code: "`workspace_helper_with_stats()` -> `maybe_snapshot_impl()` -> `handle_stale_working_copy()` -> `LockedLocalWorkingCopy::snapshot()`",
+        modules: "`WorkspaceCommandHelper`, `LocalWorkingCopy`, `LockedWorkingCopy`",
+        groups: "`jj-working-copy-flow`, `jj-command-surface`",
+        gap: "The concrete `status` command body and tree-state implementation details are not extracted."
+      },
+      "mutate-repo": {
+        title: "Create or rewrite commits",
+        summary: "Repo mutations begin with operation metadata, mutate the repo view/index in memory, create or rewrite commits, then write and publish an operation.",
+        docs: "`docs/technical/architecture.md`, `docs/operation-log.md`, `docs/core_tenets.md`",
+        code: "`start_repo_transaction()` -> `MutableRepo::new_commit()` / `rewrite_commit()` -> `Transaction::write()` -> `Transaction::commit()`",
+        modules: "`RepoLoader`, `MutableRepo`, `CommitBuilder`, `Transaction`",
+        groups: "`jj-repo-transaction-flow`",
+        gap: "Commit object wrappers, store caching, rebase descendants, and per-command mutation policies are not fully extracted."
+      },
+      "query-revisions": {
+        title: "Select commits with revsets",
+        summary: "User revset strings are parsed, aliases are expanded, symbols are bound to commits/refs, visibility is resolved, and the expression is optimized before index evaluation.",
+        docs: "`docs/revsets.md`, `docs/cli-revision-options.md`, `docs/templates.md`",
+        code: "`revset::parse()` -> `resolve_symbols()` -> `resolve_visibility()` -> `optimize()` -> index evaluation",
+        modules: "`RevsetExpression`, `ResolvedExpression`, `Index`",
+        groups: "`jj-query-flow`",
+        gap: "The Pest grammar, revset parser helpers, and default index revset engine are not expanded in this map."
+      },
+      "git-interop": {
+        title: "Use JJ with Git",
+        summary: "Colocated Git workflows import Git HEAD/refs into the JJ view, use GitBackend for object storage, and export selected JJ refs back to Git.",
+        docs: "`docs/git-compatibility.md`, `docs/git-command-table.md`, `docs/github.md`",
+        code: "`import_head()` / `import_refs()` -> JJ repo view -> `export_refs()` -> `GitBackend`",
+        modules: "`GitBackend`, `git::import_refs`, `git::export_refs`",
+        groups: "`jj-git-flow`",
+        gap: "CLI `jj git ...` command files and lower-level git subprocess helpers are adjacent but not tagged."
+      }
+    };
+
+    const flowFields = {
+      title: document.getElementById("flow-title"),
+      summary: document.getElementById("flow-summary"),
+      docs: document.getElementById("flow-docs"),
+      code: document.getElementById("flow-code"),
+      modules: document.getElementById("flow-modules"),
+      groups: document.getElementById("flow-groups"),
+      gap: document.getElementById("flow-gap")
+    };
+
+    function setFlow(key) {
+      const data = functionFlows[key];
+      if (!data) return;
+      document.querySelectorAll(".function-card").forEach((node) => {
+        node.classList.toggle("is-active", node.dataset.flowKey === key);
+      });
+      flowFields.title.textContent = data.title;
+      flowFields.summary.textContent = data.summary;
+      flowFields.docs.innerHTML = renderInlineCodes(data.docs);
+      flowFields.code.innerHTML = renderInlineCodes(data.code);
+      flowFields.modules.innerHTML = renderInlineCodes(data.modules);
+      flowFields.groups.innerHTML = renderInlineCodes(data.groups);
+      flowFields.gap.innerHTML = renderInlineCodes(data.gap);
+    }
+
+    document.querySelectorAll(".function-card").forEach((node) => {
+      node.addEventListener("click", () => setFlow(node.dataset.flowKey));
+      node.addEventListener("focus", () => setFlow(node.dataset.flowKey));
+    });
+
+    const modal = document.getElementById("diagram-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalContent = document.getElementById("modal-content");
+
+    function openDiagram(panel) {
+      const title = panel.querySelector("h3")?.textContent?.trim() || "Diagram";
+      const diagram = panel.querySelector(".mermaid");
+      modalTitle.textContent = title;
+      modalContent.replaceChildren();
+      const renderedSvg = diagram?.querySelector("svg");
+      const clone = renderedSvg ? renderedSvg.cloneNode(true) : diagram.cloneNode(true);
+      modalContent.appendChild(clone);
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeDiagram() {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
+      modalContent.replaceChildren();
+      document.body.style.overflow = "";
+    }
+
+    document.querySelectorAll(".diagram-panel").forEach((panel) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "diagram-open";
+      button.textContent = "Open large";
+      button.addEventListener("click", () => openDiagram(panel));
+      panel.appendChild(button);
+      const hint = document.createElement("p");
+      hint.className = "diagram-hint";
+      hint.textContent = "Open the diagram to pan and inspect it at readable size.";
+      panel.appendChild(hint);
+    });
+
+    document.querySelectorAll("[data-modal-close]").forEach((node) => {
+      node.addEventListener("click", closeDiagram);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) {
+        closeDiagram();
+      }
+    });
+  </script>
+</body>
+</html>
